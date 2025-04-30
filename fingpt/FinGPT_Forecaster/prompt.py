@@ -5,7 +5,8 @@ import finnhub
 import yfinance as yf
 import pandas as pd
 from openai import OpenAI
-
+from curl_cffi import requests
+session = requests.Session(impersonate="chrome")
 from indices import *
 
 finnhub_client = finnhub.Client(api_key=os.environ.get("FINNHUB_KEY"))
@@ -25,7 +26,7 @@ def get_company_prompt(symbol):
 
 def get_crypto_prompt(symbol):
 
-    profile = yf.Ticker(symbol).info
+    profile = yf.Ticker(symbol, session=session).info
 
     crpyto_template = """[Cryptocurrency Introduction]: {description}. It has a market capilization of {marketCap}."""
     
