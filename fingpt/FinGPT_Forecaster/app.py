@@ -13,7 +13,8 @@ from peft import PeftModel
 from collections import defaultdict
 from datetime import date, datetime, timedelta
 from transformers import AutoTokenizer, AutoModelForCausalLM, TextStreamer
-
+from curl_cffi import requests
+session = requests.Session(impersonate="chrome")
 
 access_token = os.environ["HF_TOKEN"]
 finnhub_client = finnhub.Client(api_key=os.environ["FINNHUB_API_KEY"])
@@ -69,7 +70,7 @@ def n_weeks_before(date_string, n):
 
 def get_stock_data(stock_symbol, steps):
 
-    stock_data = yf.download(stock_symbol, steps[0], steps[-1])
+    stock_data = yf.download(stock_symbol, steps[0], steps[-1], session=session)
     if len(stock_data) == 0:
         raise gr.Error(f"Failed to download stock price data for symbol {stock_symbol} from yfinance!")
     
