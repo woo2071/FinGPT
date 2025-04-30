@@ -13,6 +13,8 @@ from collections import defaultdict
 import datasets
 from datasets import Dataset
 from openai import OpenAI
+from curl_cffi import requests
+session = requests.Session(impersonate="chrome")
 
 from indices import *
 from prompt import get_all_prompts
@@ -37,7 +39,7 @@ def get_returns(stock_symbol, start_date, end_date):
     # TODO: likely to be merged with get_stock_data
     
     # Download historical stock data
-    stock_data = yf.download(stock_symbol, start=start_date, end=end_date)
+    stock_data = yf.download(stock_symbol, start=start_date, end=end_date, session=session)
     
     weekly_data = stock_data['Adj Close'].resample('W').ffill()
     weekly_returns = weekly_data.pct_change()[1:]
