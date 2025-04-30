@@ -7,7 +7,8 @@ from collections import defaultdict
 
 from data import get_news
 from prompt import get_company_prompt, get_prompt_by_row, sample_news
-
+from curl_cffi import requests
+session = requests.Session(impersonate="chrome")
 finnhub_client = finnhub.Client(api_key=os.environ.get("FINNHUB_KEY"))
 
 
@@ -25,7 +26,7 @@ def n_weeks_before(date_string, n):
 
 def get_stock_data(stock_symbol, steps):
 
-    stock_data = yf.download(stock_symbol, steps[0], steps[-1])
+    stock_data = yf.download(stock_symbol, steps[0], steps[-1], session=session)
     
 #     print(stock_data)
     
